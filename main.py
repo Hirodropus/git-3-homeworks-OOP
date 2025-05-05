@@ -67,7 +67,7 @@ class Reviewer(Mentor):
             else:
                 student.grades[course] = [grade]
         else:
-            return
+            return 'Ошибка'
 
     def __str__(self):
         return f"Имя: {self.name}\nФамилия: {self.surname}"
@@ -101,48 +101,79 @@ class Lecturer(Mentor):
             return NotImplemented
         return self.average_grade() == other.average_grade()
 
-best_student = Student("Роман", "Герасименко", "your_gender")
+
+def average_hw_grade(students, course):
+    total_grades = []
+    for student in students:
+        if course in student.grades:
+            total_grades.extend(student.grades[course])
+    return sum(total_grades) / len(total_grades) if total_grades else 0
+
+
+def average_lecture_grade(lecturers, course):
+    total_grades = []
+    for lecturer in lecturers:
+        if course in lecturer.grades:
+            total_grades.extend(lecturer.grades[course])
+    return sum(total_grades) / len(total_grades) if total_grades else 0
+
+
+best_student = Student("Роман", "Герасименко", "male")
 best_student.courses_in_progress += (["Python", "Git"])
 best_student.finished_courses += ['Введение в программирование']
 
-best2_student = Student("Иван", "Иванов", "your_gender")
-best2_student.courses_in_progress += (["Python"])
+best2_student = Student("Иван", "Иванов", "male")
+best2_student.courses_in_progress += (["Python", "Java"])
 
 cool_lecturer = Lecturer("Тимур", "Анвартдинов")
-cool_lecturer.courses_attached += ["Python"]
-cool_lecturer2 = Lecturer("Вася", "Пупкин")
-cool_lecturer2.courses_attached += ["Python"]
+cool_lecturer.courses_attached += ["Python", "Java"]
+
+cool_lecturer2 = Lecturer("Алёна", "Батицкая")
+cool_lecturer2.courses_attached += ["Git"]
 
 cool_reviewer = Reviewer("Александр", "Бардин")
-cool_reviewer.courses_attached += ["Python"]
+cool_reviewer.courses_attached += ["Python", "Git"]
 
+cool_reviewer1 = Reviewer("Алексей", "Неизвестный")
+cool_reviewer1.courses_attached += ["Java"]
+
+cool_reviewer.rate_hw(best_student, "Python", 2)
 cool_reviewer.rate_hw(best_student, "Python", 10)
-cool_reviewer.rate_hw(best_student, "Python", 5)
-cool_reviewer.rate_hw(best_student, "Python", 3)
+cool_reviewer.rate_hw(best_student, "Python", 7)
 
+cool_reviewer.rate_hw(best_student, "Git", 1)
 cool_reviewer.rate_hw(best_student, "Git", 5)
-cool_reviewer.rate_hw(best_student, "Git", 3)
 cool_reviewer.rate_hw(best_student, "Git", 1)
 
-cool_reviewer.rate_hw(best2_student, "Python", 1)
-cool_reviewer.rate_hw(best2_student, "Python", 5)
-cool_reviewer.rate_hw(best2_student, "Python", 3)
+cool_reviewer.rate_hw(best2_student, "Python", 9)
+cool_reviewer.rate_hw(best2_student, "Python", 0)
+cool_reviewer.rate_hw(best2_student, "Python", 2)
+
+cool_reviewer1.rate_hw(best2_student, "Java", 1)
+cool_reviewer1.rate_hw(best2_student, "Java", 4)
+cool_reviewer1.rate_hw(best2_student, "Java", 5)
 
 best_student.rate_lecturer(cool_lecturer, "Python", 10)
-best_student.rate_lecturer(cool_lecturer, "Python", 2)
-best_student.rate_lecturer(cool_lecturer, "Python", 7)
+best_student.rate_lecturer(cool_lecturer, "Python", 10)
+best_student.rate_lecturer(cool_lecturer, "Python", 1)
+
+best_student.rate_lecturer(cool_lecturer2, "Git", 5)
+best_student.rate_lecturer(cool_lecturer2, "Git", 9)
+best_student.rate_lecturer(cool_lecturer2, "Git", 10)
 
 # print(best_student.grades)
 # print(cool_lecturer.grades)
-print("Проверяющий:")
+print("Проверяющие:")
 print(cool_reviewer)
-print("\nЛектор")
+print()
+print(cool_reviewer1)
+print("\nЛекторы")
 print(cool_lecturer)
-print("\nЛектор 2")
+print()
 print(cool_lecturer2)
-print("\nСтудент")
+print("\nСтуденты")
 print(best_student)
-print("\nСтудент 2")
+print()
 print(best2_student)
 print("\nСравнение студентов:")
 print(f"{best_student.name} лучше {best2_student.name}: {best_student > best2_student}")
@@ -151,3 +182,20 @@ print("\nСравнение лекторов:")
 print(f"{cool_lecturer.name} лучше {cool_lecturer2.name}: {cool_lecturer > cool_lecturer2}")
 print(f"{cool_lecturer.name} равен {cool_lecturer2.name}: {cool_lecturer == cool_lecturer2}")
 
+python_students = [best_student, best2_student]
+python_git_lecturers = [cool_lecturer, cool_lecturer2]
+
+print("\nСредняя оценка за домашние задания по курсу Python:")
+print(f"{average_hw_grade(python_students, 'Python'):.1f}")
+
+print("\nСредняя оценка за домашние задания по курсу Git:")
+print(f"{average_hw_grade(python_students, 'Git'):.1f}")
+
+print("\nСредняя оценка за домашние задания по курсу Java:")
+print(f"{average_hw_grade(python_students, 'Java'):.1f}")
+
+print("\nСредняя оценка за лекции по курсу Python:")
+print(f"{average_lecture_grade(python_git_lecturers, 'Python'):.1f}")
+
+print("\nСредняя оценка за лекции по курсу Git")
+print(f"{average_lecture_grade(python_git_lecturers, 'Git'):.1f}")
