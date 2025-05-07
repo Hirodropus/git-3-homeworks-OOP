@@ -61,13 +61,14 @@ class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
         if (isinstance(student, Student)
                 and course in self.courses_attached
-                and course in student.courses_in_progress):
+                and course in student.courses_in_progress
+                and 1 <= grade <= 10):
             if course in student.grades:
                 student.grades[course] += [grade]
             else:
                 student.grades[course] = [grade]
         else:
-            return 'Ошибка'
+            print("Нельзя оцениввать студента ниже 0 или выше 10")
 
     def __str__(self):
         return f"Имя: {self.name}\nФамилия: {self.surname}"
@@ -119,11 +120,11 @@ def average_lecture_grade(lecturers, course):
 
 
 best_student = Student("Роман", "Герасименко", "male")
-best_student.courses_in_progress += (["Python", "Git"])
+best_student.courses_in_progress += ["Python", "Git"]
 best_student.finished_courses += ['Введение в программирование']
 
 best2_student = Student("Иван", "Иванов", "male")
-best2_student.courses_in_progress += (["Python", "Java"])
+best2_student.courses_in_progress += ["Python", "Java"]
 
 cool_lecturer = Lecturer("Тимур", "Анвартдинов")
 cool_lecturer.courses_attached += ["Python", "Java"]
@@ -149,12 +150,12 @@ cool_reviewer.rate_hw(best2_student, "Python", 9)
 cool_reviewer.rate_hw(best2_student, "Python", 0)
 cool_reviewer.rate_hw(best2_student, "Python", 2)
 
-cool_reviewer1.rate_hw(best2_student, "Java", 1)
+cool_reviewer1.rate_hw(best2_student, "Java", 10)
 cool_reviewer1.rate_hw(best2_student, "Java", 4)
 cool_reviewer1.rate_hw(best2_student, "Java", 5)
 
 best_student.rate_lecturer(cool_lecturer, "Python", 10)
-best_student.rate_lecturer(cool_lecturer, "Python", 10)
+best_student.rate_lecturer(cool_lecturer, "Python", 1)
 best_student.rate_lecturer(cool_lecturer, "Python", 1)
 
 best_student.rate_lecturer(cool_lecturer2, "Git", 5)
